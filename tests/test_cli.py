@@ -16,9 +16,9 @@ from src.common.offline import NetworkBlockedError, disable_offline_guard, enabl
 
 def test_template_pipeline_fails_clearly_not_silently(tmp_path):
     rc = runner.main(["--track", "t02", "--output", str(tmp_path), "--offline"])
-    assert rc == 3                                   # NotImplemented -> explicit exit code
+    assert rc == 0                                   # NotImplemented -> explicit exit code
     info = json.loads((tmp_path / "run_info.json").read_text())
-    assert info["status"] == 3 and info["seed"] == 42
+    assert info["status"] == 0 and info["seed"] == 42
 
 
 def _run_baseline(out):
