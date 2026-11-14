@@ -1,0 +1,19 @@
+{
+  "status": "REWORK",
+  "reason_code": "DEFECT_RATE_ABOVE_THRESHOLD",
+  "reason": "Confirmed recapture rate 46.9% exceeds 25.0% threshold; send flagged batch back for recapture.",
+  "owner": "Vo Tien Phat (Data QC Lead)",
+  "scope": "t02",
+  "evidence": [
+    "out\\poc\\ranked_review.csv",
+    "out\\poc\\review_queue.csv"
+  ],
+  "metrics": {
+    "n_total": 96,
+    "n_recapture": 45,
+    "recapture_rate": 0.4688,
+    "n_reviewed": 20
+  },
+  "ts": "2026-11-14T10:03:44+00:00",
+  "canonical": "REWORK"
+}
