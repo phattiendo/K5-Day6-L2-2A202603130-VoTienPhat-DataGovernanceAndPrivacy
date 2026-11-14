@@ -6,16 +6,17 @@
 
 ## 00 · Header
 
+## 00 · Header
+
 | Mục | Giá trị |
 |---|---|
-| Group ID | G__ |
-| Challenge | T__ · ______________________ |
-| Thành viên (5–6) + vai trò | 1. ____ (Lead/Integrator) · 2. ____ (Data & fixtures) · 3. ____ (Core algorithm) · 4. ____ (QA/metric) · 5. ____ (Review + report) · 6. ____ |
-| Git URL | ____ |
-| Tag `demo-180m` (commit) | ____ |
-| Tag `final-24h` (commit) | ____ |
-| Deadline (giờ VN) | ____ |
-
+| Group ID | G02 (Lớp K5-Day6-L2-2A202603130) |
+| Challenge | T02 · Raw QC Triage — Blurry, Glare & Underexposed Frames |
+| Thành viên (5–6) + vai trò | 1. Vo Tien Phat (`phattiendo` — Lead / Integrator & Core PoC) · 2.Pham Duc Tho `thophamxt-bit` (Data Governance & Metric Contract) · 3.Nguyen Khanh Tung `sfpcshch` (QA & Edge-Case Testing) · 4. Nguyen Hoang Nhan `Nhan1724` (Human Review & Audit Evidence) · 5. Dinh Thanh Vinh (`vdprogramm` — Report & Failure Slice Analysis) |
+| Git URL | https://github.com/phattiendo/K5-Day6-L2-2A202603130-VoTienPhat-DataGovernanceAndPrivacy |
+| Tag `demo-180m` (commit) | *(Cập nhật khi chốt tag)* |
+| Tag `final-24h` (commit) | *(Cập nhật khi chốt tag cuối)* |
+| Deadline (giờ VN) | 2026-11-15 14:00 (GMT+7) |
 ## 01 · Problem statement
 
 - Ai bị ảnh hưởng / ai chịu hậu quả khi hệ thống sai? ____
@@ -70,13 +71,15 @@
 
 | Slice | N | Baseline | PoC | Ghi chú |
 |---|---|---|---|---|
-| | | | | |
-| | | | | |
+| `cam_A \| day` | 24 | Dễ bỏ sót lóa nắng cục bộ | Bắt chính xác `glare` & `blur` | Đo độ bão hòa vùng biển số kết hợp độ nét vùng đường |
+| `cam_A \| dusk` | 16 | Nhiễu điểm số trung bình | Chuẩn hóa theo ngưỡng `dev` | Giảm báo động giả khi chuyển giao ánh sáng |
+| `cam_A \| night` | 24 | Báo động giả hàng loạt (`dark`) | Phân tách được ảnh lỗi vs ảnh tối tự nhiên | Dùng chuẩn hóa bền vững (median/IQR) riêng cho slice đêm |
+| `cam_B \| day` | 16 | Nhầm nền đường trơn với mờ | Bắt tốt khối nén JPEG (`compression`) | Kết hợp 4 đặc trưng thay vì 1 chỉ số Laplacian toàn ảnh |
+| `cam_B \| night` | 16 | Gắn cờ gần như 100% ảnh | Lọc chính xác Top-K ca nghi lỗi nặng nhất | Giữ lại các khung hình vẫn đọc được biển số/vạch đường |
 
-- Failure case 1 (ảnh/metadata + root cause): ____
-- Failure case 2: ____
-- Latency / compute (máy, CPU, ms/item): ____
-
+- **Failure case 1 (ảnh/metadata + root cause):** `img_01_2` (`cam_A | night`, `rank: 1`, `score: 1.0`, `reason: dark(z=58.58; b=0.0, d=58.6, g=0.0, c=0.2)`). *Root cause:* Thiếu sáng nghiêm trọng (underexposure) do đèn đường yếu vào ban đêm làm mất hoàn toàn chi tiết phương tiện và mặt đường; Reviewer (`Nhan1724`) xác nhận `approve` (`RECAPTURE`)[cite: 3].
+- **Failure case 2 (ảnh/metadata + root cause):** `img_06_2` (`cam_B | night`, `rank: 3`, `score: 1.0`, `reason: compression(z=31.43; b=0.0, d=16.5, g=0.0, c=31.4)`). *Root cause:* Suy hao chất lượng do nén khối JPEG 8x8 quá mức kết hợp ánh sáng yếu tạo hiệu ứng vỡ ô vuông (blocking artifacts), không đủ điều kiện gán nhãn; Reviewer xác nhận `approve` (`RECAPTURE`)[cite: 3].
+- **Latency / compute (máy, CPU, ms/item):** Chạy 100% offline trên CPU (`seed=42`), tổng thời gian xử lý 96 ảnh mất `~0.65s` (tương đương **~6.8 ms/item**, tức ~0.68s / 100 items), đáp ứng tốt yêu cầu kiểm tra nhanh tại biên (edge triage).
 ## 07 · Human & decision
 
 - Review queue (file, B, cách ưu tiên): ____
@@ -98,10 +101,10 @@ pytest -q
 
 ## 09 · Limitations & ethics
 
-- Rủi ro pháp lý / PII / license: ____
-- Điều chưa biết; false alarms; nếu scale 10× thì sao: ____
-- Không tuyên bố "đạt GDPR / luật Việt Nam" từ checklist tự động; giả định cần DPO/legal xác nhận: ____
-- Kế hoạch cải tiến: ____
+- **Rủi ro pháp lý / PII / license:** Dữ liệu hình ảnh giao thông ngoài thực địa có khả năng chứa thông tin định danh cá nhân (PII) như biển số phương tiện và khuôn mặt người đi đường (thuộc phạm vi điều chỉnh của Nghị định 13/2023/NĐ-CP về Bảo vệ dữ liệu cá nhân). Để giảm thiểu rủi ro rò rỉ dữ liệu, toàn bộ pipeline QC của nhóm vận hành **100% offline** trên hạ tầng nội bộ, tuyệt đối không gửi ảnh thô lên các API đám mây bên thứ ba; file log kiểm toán (`out/poc/decision_log.csv`) chỉ lưu trữ `item_id`, mã băm `sha256` và các chỉ số kỹ thuật ẩn danh.
+- **Điều chưa biết; false alarms; nếu scale 10× thì sao:** Với các khung hình biên vào ban đêm (`cam_A | night`), một số ảnh có độ sáng tổng thể thấp nhưng vùng biển số vẫn được đèn pha chiếu rõ vẫn có thể bị gắn cờ nhầm (`false alarm`), đòi hỏi bước duyệt thủ công (`Human-in-the-loop` qua `contact_sheet.html`) để điều chỉnh (`edit` $\rightarrow$ `KEEP`). Nếu mở rộng quy mô lên **10× (~1.000+ ảnh/lô)**, ngân sách duyệt tay cố định `B = 20` sẽ không bao quát hết vùng biên, cần nâng cấp cơ chế lấy mẫu phân tầng (stratified sampling) theo từng slice và tự động hóa bước làm mờ PII (face/plate blurring) trước khi đưa lên giao diện duyệt.
+- **Không tuyên bố "đạt GDPR / luật Việt Nam" từ checklist tự động; giả định cần DPO/legal xác nhận:** Kết quả kiểm tra từ script và checklist kỹ thuật chỉ phục vụ mục đích kiểm soát chất lượng dữ liệu đầu vào (Data QC), không cấu thành chứng nhận tuân thủ pháp lý hay GDPR/Nghị định 13. Mọi giả định về thời hạn lưu trữ ảnh `RECAPTURE`, quyền truy cập của Reviewer và quy trình xóa dữ liệu gốc đều cần được DPO (Data Protection Officer) và bộ phận pháp chế phê duyệt chính thức trước khi triển khai thực tế.
+- **Kế hoạch cải tiến:** Tích hợp thêm bộ phát hiện vùng biển số/khuôn mặt nhẹ chạy offline để vừa tính điểm chất lượng chính xác hơn tại vùng quan tâm (ROI), vừa tự động che mờ PII trước khi lưu trữ dài hạn.
 
 ## 10 · Team contribution
 
@@ -109,12 +112,11 @@ pytest -q
 
 | Học viên | Git author/email | Module / vai trò | Commit SHA / diff chứng minh | Trình bày? |
 |---|---|---|---|---|
-| Member 1 | | Integration / CLI | | |
-| Member 2 | | Data + GT | | |
-| Member 3 | | Core algorithm | | |
-| Member 4 | | Metric + tests | | |
-| Member 5 | | Review queue + report | | |
-| Member 6 (nếu có) | | Research / ablation / debate | | |
+| Vo Tien Phat | `phattiendo` | Lead / Integrator & Core PoC (`src/pipeline.py`, `src/baseline_t02.py`, `configs/lab.yaml`)[cite: 3] | Dựng khung Baseline + PoC đa đặc trưng + Unit tests; merge cuối và gắn tag[cite: 3] | Có |
+| Pham Duc Tho | `thophamxt-bit` | Data Governance & Metric Contract (`configs/lab.yaml`, `reports/metric_contract.md`)[cite: 3] | Cập nhật `group_id`, rà soát thông số ngưỡng/split và ký chốt `metric_contract.md`[cite: 3] | Có |
+| Nguyen Khanh Tung | `sfpcshch` | QA & Edge-Case Testing (`tests/test_t02_pipeline.py`)[cite: 3] | Bổ sung unit test kiểm tra tính hợp lệ cột `score` (`[0, 1]`, không `NaN`) và trạng thái `decision.json`[cite: 3] | Có |
+| Nguyen Hoang Nhan | `Nhan1724` | Human Review & Audit Evidence (`out/poc/review_queue_reviewed.csv`, `decision_log.csv`, `decision.json`)[cite: 3] | Thực hiện duyệt 20 ca biên trên `contact_sheet.html`, xuất CSV và ghi nhận cổng `REWORK` (46.9% lỗi)[cite: 3] | Có |
+| Dinh Thanh Vinh | `vdprogramm` (`dinhthanhvinhnb205@gmail.com`) | Report & Failure Slice Analysis (`reports/group_report.md`)[cite: 3] | Hoàn thiện báo cáo nhóm, phân tích failure slices (`cam_A/cam_B`, `day/dusk/night`) và rủi ro PII/DPO[cite: 3] | Có |
 
 ## 11 · References
 
