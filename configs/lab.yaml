@@ -1,4 +1,4 @@
-group_id: G02
+group_id: G03
 owner: "Vo Tien Phat (Data QC Lead)"
 track_config: tracks/t02.yaml
 track: t02
@@ -11,4 +11,11 @@ strict_provenance: true
 params:
   budget: 20
   dev_split: dev
+  z_defect_threshold: 1.35
+  sigmoid_center: 1.50
+  baseline_lap_threshold: 120.0
   rework_rate_threshold: 0.25
+
+eval_params:
+  budget: 20
+  split: eval
