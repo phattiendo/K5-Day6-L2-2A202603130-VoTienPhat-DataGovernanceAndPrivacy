@@ -12,8 +12,8 @@
 | Challenge | T02 · Raw QC Triage — Blurry, Glare & Underexposed Frames |
 | Thành viên (4) + vai trò | 1. Vo Tien Phat (`shadow_ping` — Lead / Integrator & Core PoC) · 2. Pham Duc Tho (`thophamxt-bit` — Data Governance & Metric Contract) · 3. Nguyen Hoang Nhan (`Nhan1724` — Human Review & Audit Evidence) · 4. Dinh Thanh Vinh (`vdprogramm` — Report & Failure Slice Analysis) |
 | Git URL | https://github.com/phattiendo/K5-Day6-L2-2A202603130-VoTienPhat-DataGovernanceAndPrivacy |
-| Tag `demo-180m` (commit) | *(Cập nhật khi chốt tag)* |
-| Tag `final-24h` (commit) | *(Cập nhật khi chốt tag cuối)* |
+| Tag `demo-180m` (commit) | `demo-180m` |
+| Tag `final-24h` (commit) | `final-24h` |
 | Deadline (giờ VN) | 2026-11-15 14:00 (GMT+7) |
 
 ## 01 · Problem statement
