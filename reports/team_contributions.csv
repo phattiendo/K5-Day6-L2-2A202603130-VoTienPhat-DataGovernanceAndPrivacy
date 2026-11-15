@@ -1,6 +1,5 @@
 member,git_author_name,git_email,role,modules_files,commit_shas,evidence_note,presenter
-Member 1,,,Lead / Integrator,src/main.py; configs/,,,
-Member 2,,,Data & fixtures,fixtures/; tools/,,,
-Member 3,,,Core algorithm,src/pipeline.py,,,
-Member 4,,,QA / metric,tests/; reports/metrics_*.json,,,
-Member 5,,,Human review + report,reports/group_report.md; demo/,,,
+Vo Tien Phat,shadow_ping,kingbosswadu199@gmail.com,Lead / Integrator & Core PoC,"src/pipeline.py; src/baseline_t02.py; configs/lab.yaml; tests/test_t02_pipeline.py",9cb35da,Setup T02 baseline + PoC multi-feature pipeline + unit tests + config,Yes
+Pham Duc Tho,thophamxt-bit,thophamxt@gmail.com,Data Governance & Metric Contract,"reports/metric_contract.md; configs/lab.yaml","65fb06d;4ea6261",Update metric_contract.md and lab.yaml config params,Yes
+Nguyen Hoang Nhan,Nhan1704,anh359074@gmail.com,Human Review & Audit Evidence,"out/poc/review_queue_reviewed.csv; out/poc/decision_log.csv",25d760a,Add human-in-the-loop QC review overrides and decision log,Yes
+Dinh Thanh Vinh,Dinh Thanh Vinh,dinhthanhvinhnb205@gmail.com,Report & Failure Slice Analysis,"reports/group_report.md",eed2ef2,Complete group report slice analysis and data privacy section,Yes

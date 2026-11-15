@@ -25,8 +25,12 @@ fixtures:            ## instructor only: regenerate fixtures (needs the private 
 	@test -f tools/make_fixtures.py || { echo "tools/make_fixtures.py is instructor-only (private overlay not installed)"; exit 1; }
 	$(PY) -m tools.make_fixtures
 
-baseline:            ## random baseline wiring example (t01, t02, t11, t13)
-	$(PY) -m src.main --track $(TRACK) --pipeline src.examples.random_baseline --output $(OUT)/baseline --run-name baseline --offline --seed 42
+baseline:            ## baseline: track-specific baseline if exists, else random baseline
+	@if [ -f src/baseline_$(TRACK).py ]; then \
+		$(PY) -m src.main --track $(TRACK) --pipeline src.baseline_$(TRACK) --output $(OUT)/baseline --run-name baseline --offline --seed 42; \
+	else \
+		$(PY) -m src.main --track $(TRACK) --pipeline src.examples.random_baseline --output $(OUT)/baseline --run-name baseline --offline --seed 42; \
+	fi
 
 run:                 ## your PoC (src/pipeline.py)
 	$(PY) -m src.main --config configs/lab.yaml --track $(TRACK) --output $(OUT)/poc --run-name poc --offline --seed 42
